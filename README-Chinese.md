@@ -1,8 +1,18 @@
+[英文文档](https://github.com/huweicool/get-safe-value#readme)
+
 # get-safe-value
 可以安全获取对象某个值的实用函数库。
 在实际开发过程中，前端和后台使用API进行数据的传递，经常会遇到数据类型不匹配导致的报错。比如API应该返回一个Array，结果确返回了一个null类型，这时候我们去直接调用Array的方法函数(或者做一层判断，但这又会显得繁琐)，代码会报错导致程序中断，这在客户端是一个严重的问题，严重印象用户体验。所以这时候需要一个工具函数方法，确保我们想要Array，就一定能获取到Array这个正确数据类型。
 
-## Usage
+## 安装
+
+Install with [npm](https://www.npmjs.com/):
+
+```sh
+  npm install --save get-safe-value
+```
+
+## 使用
 注：测试用例稍后补上。
 ```js
 const obj = {
