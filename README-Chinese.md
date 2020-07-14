@@ -6,7 +6,7 @@
 
 ## 安装
 
-Install with [npm](https://www.npmjs.com/):
+Install with [npm](https://www.npmjs.com/package/get-safe-value)
 
 ```sh
   npm install --save get-safe-value

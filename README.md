@@ -8,7 +8,7 @@ During the actual development process, the front-end and back-end use API for da
 
 ## Install
 
-Install with [npm](https://www.npmjs.com/):
+Install with [npm](https://www.npmjs.com/package/get-safe-value)
 
 ```sh
   npm install --save get-safe-value
