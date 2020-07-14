@@ -23,7 +23,7 @@ const minNumber = -(Math.pow(2, 53) - 1);
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 
-// 获取多次嵌套对象的值
+// Gets the value of multiple nested objects
 function getDeepValue(obj, keys) {
   let value = obj;
   const _keys = JSON.parse(JSON.stringify(keys));
@@ -34,7 +34,7 @@ function getDeepValue(obj, keys) {
   return value;
 }
 
-// key是字符串的话 ( "array[0].name" )，转成数组keys (["array","0","name"])
+// Key is a string of words (" array [0]. The name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
   if( !isString(key) ) return key;
   if( isString(key) && !(/\.+/g.test(key)) ) return key;
@@ -64,7 +64,6 @@ function getDefaultValue(key, defaultValue, isType) {
   return defaultValue;
 }
 
-// 所有的取值都交给getValue来处理
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
   if (!isObject(obj) && !isArray(obj)) return getDefaultValue(key, defaultValue, isType);
   const keys = getKeys(key);
@@ -72,37 +71,9 @@ function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
   return isType(value) ? getVal(value) : getDefaultValue(key, defaultValue, isType);
 }
 
-/**
- *
- * @param {Object} obj
- * @param {String||Array} key
- * @param {*} [defaultValue=defaultString]
- * @returns
- * 例子：
- *  const obj = {
- *    str: "a",
- *    number: 10,
- *    child:{ str: "aa" },
- *    array:[
- *     {
- *       str: "b",
- *        number: 20
- *      },
- *      {
- *       str: "c",
- *       list:[1,2,3]
- *      }
- *    ]
- *  }
- *  getString(obj,"str");                         //"a"
- *  getString(obj,"number");                      //"10"
- *  getString(obj,"array[0].str");                //"b"
- *  getString(obj,"array[1].list[0]");            // "1"
- *  getString(obj,"child.str");                  //"aa"
- *  getString(obj,["child","str"]);               //"aa"
- */
+
 function getString(obj, key, defaultValue = defaultString) {
-  const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //基本数据类型能转成字符串的，调用toString转成字符串
+  const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //The basic data type can be converted to a String by calling the String constructor
   return getValue(obj, key, defaultValue, _isString, (value) => String(value));
 }
 
@@ -167,21 +138,6 @@ function getFn(type) {
   return config.hasOwnProperty(type) ? config[type] : getString;
 }
 
-/**
- *批量处理object对象
-  * 例：入参 obj = { name: 'zhangsan', age: 30, height: '' },
-  *         keys = [
-  *            ['name','string'],
-  *            ['age','number'],
-  *            ['height', 'number'],
-  *          ]
-  *    出参 { name: 'zhangsan', age: 30, height: 0 }
-  * @param {Object} obj
-  * @param {Array} keys
-  * @param {any} [defaultValue=defaultObject]
-  * @returns {Object }
-  * @memberof MapUtils
-  */
 function getObjectBatch(obj, keys, defaultValue = defaultObject) {
   if (!isObject(obj)) return defaultValue;
   if (!isArray(keys)) return obj;
