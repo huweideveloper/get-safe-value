@@ -1,9 +1,9 @@
 # get-safe-value
-A library of utility functions that secure a value of an object.
-During the actual development process, the front-end and back-end use API for data transfer, often encountered data type mismatch caused by the error. API should return a Array, result and return a null type, for example, when we call the Array method function directly (or make a layer of judgment, but this can be cumbersome), and the code error causes the program to be interrupted, which is a serious problem on the client side seriously impresses the user experience. So you need a tool function method to make sure you get Array correct data type if you want Array.
+可以安全获取对象某个值的实用函数库。
+在实际开发过程中，前端和后台使用API进行数据的传递，经常会遇到数据类型不匹配导致的报错。比如API应该返回一个Array，结果确返回了一个null类型，这时候我们去直接调用Array的方法函数(或者做一层判断，但这又会显得繁琐)，代码会报错导致程序中断，这在客户端是一个严重的问题，严重印象用户体验。所以这时候需要一个工具函数方法，确保我们想要Array，就一定能获取到Array这个正确数据类型。
 
 ## Usage
- Note: Test cases will be filled later.
+注：测试用例稍后补上。
 ```js
 const obj = {
 	str: "a",
@@ -29,7 +29,7 @@ const obj = {
 }
 // getString
 console.log(getString(obj, "str")); //'a'
-console.log(getString(obj, "number")); //'10'  String array and Boolean, both call String constructor to String type
+console.log(getString(obj, "number")); //'10' 字符串 数组 和布尔值，都会调用String构造函数转成String类型
 console.log(getString(obj, "array")); //''
 console.log(getString(obj, "child", "hello")); // 'hello' 
 console.log(getString(obj, "array")); //''
@@ -41,10 +41,10 @@ console.log(getString(obj, ["child", "array", 0, "str"])); //'c'
 
 //getNumber
 console.log(getNumber(obj, "number")); //10
-console.log(getNumber(obj, "str")); //0 Type mismatch default return Number：0 Number：0
-console.log(getNumber(obj, "child.number")); //20, The string calls Number constructor to Number type
-console.log(getNumber(obj, "child.n")); //0 NaN are not valid figures
-console.log(getNumber(obj, "child.maxNumber")); //0 Over the maximum safe number value: Math.pow(2,53)-1.
+console.log(getNumber(obj, "str")); //0 类型不匹配默认返回Number:0
+console.log(getNumber(obj, "child.number")); //20, 字符串会调用Number构造函数转成Number类型
+console.log(getNumber(obj, "child.n")); //0 NaN不是有效数字
+console.log(getNumber(obj, "child.maxNumber")); //0 超过了最大安全的number值: Math.pow(2, 53) - 1
 
 //getBoolean
 console.log(getBoolean(obj, "bool")) // true
