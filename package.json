@@ -10,6 +10,15 @@
         "type": "git",
         "url": "git+https://github.com/huweicool/get-safe-value.git"
     },
+    "keywords": [
+        "getString",
+        "getNumber",
+        "getBoolean",
+        "getObject",
+        "getArray",
+        "getFunction",
+        "getAny"
+    ],
     "author": "huweiweb@126.com",
     "license": "ISC",
     "bugs": {
