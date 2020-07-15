@@ -15,8 +15,14 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
 ```
 
 
+## Test
+
+```sh
+  npm test
+```
+
 ## Usage
- Note: Test cases will be filled later.
+
 ```js
 const obj = {
 	str: "a",

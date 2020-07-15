@@ -4,7 +4,7 @@
     "description": "A library of utility functions that can safely retrieve values",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "nyc --reporter=text --reporter=html mocha"
     },
     "repository": {
         "type": "git",
@@ -16,5 +16,13 @@
     "bugs": {
         "url": "https://github.com/huweicool/get-safe-value/issues"
     },
-    "homepage": "https://github.com/huweicool/get-safe-value#readme"
+    "homepage": "https://github.com/huweicool/get-safe-value#readme",
+    "dependencies": {
+        "glob": "^7.1.2",
+        "micromatch": "^3.1.5",
+        "minimist": "^1.2.0",
+        "mocha": "^3.5.3",
+        "nyc": "^11.4.1",
+        "write": "^1.0.3"
+    }
 }

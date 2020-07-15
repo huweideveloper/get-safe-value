@@ -16,7 +16,6 @@ const defaultBoolean = false;
 const defaultObject = {};
 const defaultArray = [];
 const defaultFunction = function() {};
-const defaultAsyncFunction = async function() {};
 const defaultGetVal = (value) => value;
 const maxNumber = Math.pow(2, 53) - 1;
 const minNumber = -(Math.pow(2, 53) - 1);
@@ -117,10 +116,6 @@ function getFunction(obj, key, defaultValue = defaultFunction) {
   return getValue(obj, key, defaultValue, _isFunction);
 }
 
-function getAsyncFunction(obj, key, defaultValue = defaultAsyncFunction) {
-  return getValue(obj, key, defaultValue, isAsyncFunction);
-}
-
 function getAny(obj, key) {
   return getValue(obj, key, defaultUndefined, () => true);
 }
@@ -169,7 +164,6 @@ module.exports = {
   getObject,
   getArray,
   getFunction,
-  getAsyncFunction,
   getObjectBatch,
   getArrayBatch,
 }

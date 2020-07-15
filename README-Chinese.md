@@ -12,8 +12,15 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
   npm install --save get-safe-value
 ```
 
+
+## 测试
+
+```sh
+  npm test
+```
+
 ## 使用
-注：测试用例稍后补上。
+
 ```js
 const obj = {
 	str: "a",
