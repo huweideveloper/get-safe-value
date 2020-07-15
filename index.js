@@ -37,7 +37,7 @@ function getDeepValue(obj, keys) {
 // Key is a string of words (" array [0]. The name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
   if( !isString(key) ) return key;
-  if( isString(key) && !(/\.+/g.test(key)) ) return key;
+  if( isString(key) && !(/[\.|[]+/g.test(key)) ) return key;
   let keys = [];
   key.replace(rePropName, (match, number, quote, subString) => {
     const value = quote
