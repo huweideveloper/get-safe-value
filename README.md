@@ -2,8 +2,8 @@
 [中文文档](https://github.com/huweicool/get-safe-value/blob/master/README-Chinese.md)
 
 # get-safe-value
-A library of utility functions that secure a value of an object.
-During the actual development process, the front-end and back-end use API for data transfer, often encountered data type mismatch caused by the error. API should return a Array, result and return a null type, for example, when we call the Array method function directly (or make a layer of judgment, but this can be cumbersome), and the code error causes the program to be interrupted, which is a serious problem on the client side seriously impresses the user experience. So you need a tool function method to make sure you get Array correct data type if you want Array.
+A utility library that safely retrieves a value from an object.
+In the actual development process, the front-end and the back-end use APIS to exchange data and often encounter errors caused by data type mismatch. For example, if the API should return an Array, but returns a NULL type, we would call Array's method function directly (or make a judgment, but this would be tedious), and the code would report an error and cause the program to break, which is a serious problem on the client side and greatly affects the user experience. So we need a utility function method to make sure we get the right data type.
 
 
 ## Install
