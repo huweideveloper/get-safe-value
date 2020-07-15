@@ -15,12 +15,6 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
 ```
 
 
-## Test
-
-```sh
-  npm test
-```
-
 ## Usage
 
 ```js
@@ -85,4 +79,12 @@ console.log(getFunction(obj, "number")) // function(){}
 console.log(getAny(obj, "str")) // 'a'
 console.log(getAny(obj, "number")) // 10,
 console.log(getAny(obj, "hello")) // undefined
+```
+
+
+
+## Test
+
+```sh
+  npm test
 ```
