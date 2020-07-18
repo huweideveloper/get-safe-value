@@ -18,6 +18,9 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
 ## Usage
 
 ```js
+const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } =  require('get-safe-value');
+// or
+// import { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } from 'get-safe-value';
 const obj = {
 	str: "a",
 	number: 10,
