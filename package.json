@@ -1,6 +1,6 @@
 {
     "name": "get-safe-value",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A library of utility functions that can safely retrieve values",
     "main": "index.js",
     "scripts": {
@@ -18,11 +18,7 @@
     },
     "homepage": "https://github.com/huweicool/get-safe-value#readme",
     "dependencies": {
-        "glob": "^7.1.2",
-        "micromatch": "^3.1.5",
-        "minimist": "^1.2.0",
         "mocha": "^3.5.3",
-        "nyc": "^11.4.1",
-        "write": "^1.0.3"
+        "nyc": "^11.4.1"
     }
 }
