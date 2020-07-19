@@ -102,7 +102,7 @@ const obj = {
 console.log(getString(obj, "str")); //'a'
 console.log(getString(obj, "number")); //'10' 字符串 数组 和布尔值，都会调用String构造函数转成String类型
 console.log(getString(obj, "array")); //''
-console.log(getString(obj, "child", "hello")); // 'hello' 
+console.log(getString(obj, "child", "hello")); // 'hello'  第三个参数为默认值，如果不能正确获取到String类型的值，返回默认值。
 console.log(getString(obj, "array")); //''
 console.log(getString(obj, "child")); //''
 console.log(getString(obj, "child.str")); //'b'
