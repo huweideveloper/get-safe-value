@@ -2,8 +2,62 @@
 [中文文档](https://github.com/huweicool/get-safe-value/blob/master/README-Chinese.md)
 
 # get-safe-value
-A utility library that safely retrieves a value from an object.
-In the actual development process, the front-end and the back-end use APIS to exchange data and often encounter errors caused by data type mismatch. For example, if the API should return an Array, but returns a NULL type, we would call Array's method function directly (or make a judgment, but this would be tedious), and the code would report an error and cause the program to break, which is a serious problem on the client side and greatly affects the user experience. So we need a utility function method to make sure we get the right data type.
+
+ In a secure way, a library of function tools for obtaining values of a particular data type.
+
+#  Why is it important to secure a particular data type value
+
+we have all encountered problems in the actual development process caused by data format or data type errors when using API for data exchange before and after, which is very common in JavaScript this weak type programming language. One type of data, for example, should be Array, the result is obtained null, calling a Array method will report an error. or multi-layer nesting of data, to get a particular value requires a lot of judgment to avoid errors. Data type errors often lead to program interruptions, which is a serious problem that greatly affects the user experience.
+
+Examples that cause program errors:
+
+```js
+const a = {
+  child:{
+    child:{
+      arr:null
+    }
+  }
+}
+const arr = a.child.child.arr;
+arr.forEach(item=>{}) //Error, arr is not an array
+// or
+if( Array.isArray(arr) ){		// Not recommended, need to make additional judgment
+   // Do something
+}
+
+console.log(a.b.child); //Error, object a no property b
+//or
+if( a && a.b && a.b.child  ){	// Not recommended, also need to make additional judgment
+   //Do something
+}
+```
+
+#  why use get-safe-value in the project
+
+ By using get-safe-value in a project, you can avoid the error example above, and when you get a data, make sure that the type of data is what we expect, so that you can safely call methods or display them on the user interface, avoiding the catastrophic consequences of program interruptions.
+
+Consider using get-safe-value to handle the above error examples
+
+```js
+// Install "get-safe-value" first( npm install --save get-safe-value )
+import { getArray, getObject } from 'get-safe-value';
+const a = {
+  child:{
+    child:{
+      arr:null
+    }
+  }
+}
+const arr = getArray(a,'child.child.arr');
+console.log(arr); // [] Get the empty array
+arr.forEach(item=>{}) //arr is our expected array object, no error
+
+const child = getObject(a, 'b.child');
+console.log(child); // {}  Get empty object
+console.log(child.hasOwnProperty("key")) // child we expect Object, will not report errors
+
+```
 
 
 ## Install
