@@ -25,10 +25,8 @@ const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?
 // Gets the value of multiple nested objects
 function getDeepValue(obj, keys) {
   let value = obj;
-  const _keys = JSON.parse(JSON.stringify(keys));
-  while ((isObject(value) || isArray(value)) && _keys.length > 0) {
-    value = value[_keys[0]];
-    _keys.shift();
+  while ((isObject(value) || isArray(value)) && keys.length > 0) {
+    value = value[keys.shift()];
   }
   return value;
 }
@@ -120,42 +118,6 @@ function getAny(obj, key) {
   return getValue(obj, key, defaultUndefined, () => true);
 }
 
-function getFn(type) {
-  type = isString(type) ? type.toLowerCase() : "";
-  const config = {
-    string: getString,
-    number: getNumber,
-    boolean: getBoolean,
-    object: getObject,
-    array: getArray,
-    function: getFunction,
-  };
-  return config.hasOwnProperty(type) ? config[type] : getString;
-}
-
-function getObjectBatch(obj, keys, defaultValue = defaultObject) {
-  if (!isObject(obj)) return defaultValue;
-  if (!isArray(keys)) return obj;
-  keys.forEach((item) => {
-    const [key, type, defaultValue] = [getString(item, 0), getString(item,1), getAny(item,2)];
-    if (obj.hasOwnProperty(key)) {
-      const fn = getFn(type);
-      obj[key] = fn(obj, key, defaultValue);
-    }
-  });
-  return obj;
-}
-
-function getArrayBatch(array, keys, defaultValue = defaultArray) {
-  if (!isArray(array)) return defaultValue;
-  if (!isArray(keys)) return array;
-  array.forEach((item, i) => {
-    array[i] = getObjectBatch(item, keys);
-  });
-  return array;
-}
-
-
 module.exports = {
   getAny,
   getString,
@@ -164,6 +126,4 @@ module.exports = {
   getObject,
   getArray,
   getFunction,
-  getObjectBatch,
-  getArrayBatch,
 }
