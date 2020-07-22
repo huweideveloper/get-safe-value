@@ -1,5 +1,7 @@
 
 const {
+  isNull,
+  isUndefined,
   isString,
   isNumber,
   isBoolean,
@@ -21,6 +23,22 @@ const maxNumber = Math.pow(2, 53) - 1;
 const minNumber = -(Math.pow(2, 53) - 1);
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+
+function getProcessObject(obj, key){
+  if( isNull(key) || isUndefined(key) ){
+    key = "key"+parseInt(Math.random()* 100000000);
+    return {
+      _obj:{
+        [key]: obj,
+      },
+      _key: key,
+    }
+  }
+  return {
+    _obj: obj,
+    _key: key
+  }
+}
 
 // Gets the value of multiple nested objects
 function getDeepValue(obj, keys) {
@@ -62,10 +80,11 @@ function getDefaultValue(key, defaultValue, isType) {
 }
 
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
-  if (!isObject(obj) && !isArray(obj)) return getDefaultValue(key, defaultValue, isType);
-  const keys = getKeys(key);
-  const value = isArray(keys) ? getDeepValue(obj, keys) : obj[keys];
-  return isType(value) ? getVal(value) : getDefaultValue(key, defaultValue, isType);
+  const { _obj, _key } = getProcessObject(obj, key);
+  if (!isObject(_obj) && !isArray(_obj)) return getDefaultValue(_key, defaultValue, isType);
+  const keys = getKeys(_key);
+  const value = isArray(keys) ? getDeepValue(_obj, keys) : _obj[keys];
+  return isType(value) ? getVal(value) : getDefaultValue(_key, defaultValue, isType);
 }
 
 

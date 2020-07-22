@@ -31,6 +31,19 @@ const a = ['2',2,true,false,['1',2, true],{ str: '3', number:3 }];
 describe('getString', function() {
   it('test getString', function() {
 
+    assert.deepStrictEqual(getString(null), '');
+    assert.deepStrictEqual(getString(undefined), '');
+    assert.deepStrictEqual(getString("hello world"), "hello world");
+    assert.deepStrictEqual(getString(true), "true");
+    assert.deepStrictEqual(getString(false), 'false');
+    assert.deepStrictEqual(getString(0), "0");
+    assert.deepStrictEqual(getString(123), '123');
+    assert.deepStrictEqual(getString({}), '');
+    assert.deepStrictEqual(getString({age:1, key: 1}), '');
+    assert.deepStrictEqual(getString([]), '');
+    assert.deepStrictEqual(getString([12,3,4]), '');
+    assert.deepStrictEqual(getString(function(){}), '');
+
     assert.deepStrictEqual(getString(o,'_undef'), '');
     assert.deepStrictEqual(getString(o,'_null'), '');
     assert.deepStrictEqual(getString(o,'str'), '1');
@@ -58,7 +71,6 @@ describe('getString', function() {
     assert.deepStrictEqual(getString(o,['obj','obj', 'obj','str']), '7');
     assert.deepStrictEqual(getString(o,['obj','obj', 'obj','number']), '7');
 
-    
     assert.deepStrictEqual(getString(a,'0'), '2');
     assert.deepStrictEqual(getString(a,'1'), '2');
     assert.deepStrictEqual(getString(a,2), 'true');
@@ -76,6 +88,19 @@ describe('getString', function() {
 
 describe('getNumber', function() {
   it('test getNumber', function() {
+
+    assert.deepStrictEqual(getNumber(null), 0);
+    assert.deepStrictEqual(getNumber(undefined), 0);
+    assert.deepStrictEqual(getNumber("hello world"), 0);
+    assert.deepStrictEqual(getNumber(true), 1);
+    assert.deepStrictEqual(getNumber(false), 0);
+    assert.deepStrictEqual(getNumber(0), 0);
+    assert.deepStrictEqual(getNumber(123), 123);
+    assert.deepStrictEqual(getNumber({}), 0);
+    assert.deepStrictEqual(getNumber({age:1, key: 1}), 0);
+    assert.deepStrictEqual(getNumber([]), 0);
+    assert.deepStrictEqual(getNumber([12,3,4]), 0);
+    assert.deepStrictEqual(getNumber(function(){}), 0);
 
     assert.deepStrictEqual(getNumber(o,'_undef'), 0);
     assert.deepStrictEqual(getNumber(o,'_null'), 0);
@@ -123,6 +148,19 @@ describe('getNumber', function() {
 describe('getBoolean', function() {
   it('test getBoolean', function() {
 
+    assert.deepStrictEqual(getBoolean(null), false);
+    assert.deepStrictEqual(getBoolean(undefined), false);
+    assert.deepStrictEqual(getBoolean("hello world"), false);
+    assert.deepStrictEqual(getBoolean(true), true);
+    assert.deepStrictEqual(getBoolean(false), false);
+    assert.deepStrictEqual(getBoolean(0), false);
+    assert.deepStrictEqual(getBoolean(123), false);
+    assert.deepStrictEqual(getBoolean({}), false);
+    assert.deepStrictEqual(getBoolean({age:1, key: 1}), false);
+    assert.deepStrictEqual(getBoolean([]), false);
+    assert.deepStrictEqual(getBoolean([12,3,4]), false);
+    assert.deepStrictEqual(getBoolean(function(){}), false);
+
     assert.deepStrictEqual(getBoolean(o,'_undef'), false);
     assert.deepStrictEqual(getBoolean(o,'_null'), false);
     assert.deepStrictEqual(getBoolean(o,'str'), false);
@@ -162,6 +200,19 @@ describe('getBoolean', function() {
 describe('getObject', function() {
   it('test getObject', function() {
 
+    assert.deepStrictEqual(getObject(null), {});
+    assert.deepStrictEqual(getObject(undefined), {});
+    assert.deepStrictEqual(getObject("hello world"), {});
+    assert.deepStrictEqual(getObject(true), {});
+    assert.deepStrictEqual(getObject(false), {});
+    assert.deepStrictEqual(getObject(0), {});
+    assert.deepStrictEqual(getObject(123), {});
+    assert.deepStrictEqual(getObject({}), {});
+    assert.deepStrictEqual(getObject({age:1, key: 1}), {age:1, key: 1});
+    assert.deepStrictEqual(getObject([]), {});
+    assert.deepStrictEqual(getObject([12,3,4]), {});
+    assert.deepStrictEqual(getObject(function(){}), {});
+
     assert.deepStrictEqual(getObject(o,'_undef'), {});
     assert.deepStrictEqual(getObject(o,'_null'), {});
     assert.deepStrictEqual(getObject(o,'str'), {});
@@ -195,6 +246,19 @@ describe('getObject', function() {
 
 describe('getArray', function() {
   it('test getArray', function() {
+
+    assert.deepStrictEqual(getArray(null), []);
+    assert.deepStrictEqual(getArray(undefined), []);
+    assert.deepStrictEqual(getArray("hello world"), []);
+    assert.deepStrictEqual(getArray(true), []);
+    assert.deepStrictEqual(getArray(false), []);
+    assert.deepStrictEqual(getArray(0), []);
+    assert.deepStrictEqual(getArray(123), []);
+    assert.deepStrictEqual(getArray({}), []);
+    assert.deepStrictEqual(getArray({age:1, key: 1}), []);
+    assert.deepStrictEqual(getArray([]), []);
+    assert.deepStrictEqual(getArray([12,3,4]), [12,3,4]);
+    assert.deepStrictEqual(getArray(function(){}), []);
 
     assert.deepStrictEqual(getArray(o,'_undef'), []);
     assert.deepStrictEqual(getArray(o,'_null'), []);
@@ -243,6 +307,18 @@ describe('getFunction', function() {
 
 describe('getAny', function() {
   it('test getAny', function() {
+    assert.deepStrictEqual(getAny(null), null);
+    assert.deepStrictEqual(getAny(undefined), undefined);
+    assert.deepStrictEqual(getAny("hello world"), "hello world");
+    assert.deepStrictEqual(getAny(true), true);
+    assert.deepStrictEqual(getAny(false), false);
+    assert.deepStrictEqual(getAny(0), 0);
+    assert.deepStrictEqual(getAny(123), 123);
+    assert.deepStrictEqual(getAny({}), {});
+    assert.deepStrictEqual(getAny({age:1, key: 1}), {age:1, key: 1});
+    assert.deepStrictEqual(getAny([]), []);
+    assert.deepStrictEqual(getAny([12,3,4]), [12,3,4]);
+
     assert.deepStrictEqual(getAny(o,'_undef'), undefined);
     assert.deepStrictEqual(getAny(o,'_null'), null);
     assert.deepStrictEqual(getAny(o,'str'), '1');
