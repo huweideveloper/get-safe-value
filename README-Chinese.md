@@ -55,6 +55,10 @@ console.log(getString(obj, "child.str")); //'b'
 console.log(getString(obj, "child.array[0].str")); //'c'
 console.log(getString(obj, ["child", "str"])); //'b'
 console.log(getString(obj, ["child", "array", 0, "str"])); //'c'
+console.log(getString("hello")); //'hello'
+console.log(getString(null)); //''
+console.log(getString({})); //''
+console.log(getString([])); //''
 
 //getNumber
 console.log(getNumber(obj, "number")); //10
@@ -62,6 +66,11 @@ console.log(getNumber(obj, "str")); //0 类型不匹配默认返回Number:0
 console.log(getNumber(obj, "child.number")); //20, 字符串会调用Number构造函数转成Number类型
 console.log(getNumber(obj, "child.n")); //0 NaN不是有效数字
 console.log(getNumber(obj, "child.maxNumber")); //0 超过了最大安全的number值: Math.pow(2, 53) - 1
+console.log(getNumber("hello")); //0
+console.log(getNumber("123")); //123
+console.log(getNumber(null)); //0
+console.log(getNumber({})); //0
+console.log(getNumber([])); //0
 
 //getBoolean
 console.log(getBoolean(obj, "bool")) // true
@@ -89,7 +98,7 @@ console.log(getAny(obj, "hello")) // undefined
 
 
 ## 测试
-
+更多例子查看测试
 ```sh
   npm test
 ```
