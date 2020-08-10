@@ -95,6 +95,18 @@ console.log(getAny(obj, "hello")) // undefined
 
 ```
 
+## 方法
+
+| 方法 | 返回值类型 |
+| ------ | ------ |
+| getString | String |
+| getNumber | Number |
+| getBoolean | Boolean |
+| getObject | Object |
+| getArray | Array |
+| getFunction | Function || asyncFunction |
+| getAny | Any |
+
 
 
 ## 测试

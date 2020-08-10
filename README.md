@@ -94,6 +94,18 @@ console.log(getAny(obj, "hello")) // undefined
 ```
 
 
+## methods
+
+| method | Return type |
+| ------ | ------ |
+| getString | String |
+| getNumber | Number |
+| getBoolean | Boolean |
+| getObject | Object |
+| getArray | Array |
+| getFunction | Function || asyncFunction |
+| getAny | Any |
+
 
 ## Test
 More examples to see the test
