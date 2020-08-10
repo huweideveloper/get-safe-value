@@ -8,8 +8,7 @@ const {
   isObject,
   isArray,
   isFunction,
-  isAsyncFunction,
-} = require("./type");
+} = require("validate-data-type");
 
 const defaultUndefined = undefined;
 const defaultString = "";
@@ -20,10 +19,8 @@ const defaultArray = [];
 const defaultFunction = function() {};
 const defaultGetVal = (value) => value;
 const maxNumber = Math.pow(2, 53) - 1;
-const minNumber = -(Math.pow(2, 53) - 1);
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-
 function getProcessObject(obj, key){
   if( isNull(key) || isUndefined(key) ){
     key = "key"+parseInt(Math.random()* 100000000);
@@ -100,7 +97,7 @@ function getNumber(obj, key, defaultValue = defaultNumber) {
       isNumber(value) &&
       isFinite(value) &&
       value < maxNumber &&
-      value > minNumber
+      value > -maxNumber
     );
   };
   return getValue(obj, key, defaultValue, _isNumber, (value) => Number(value));
@@ -129,13 +126,13 @@ function getArray(obj, key, defaultValue = defaultArray) {
 }
 
 function getFunction(obj, key, defaultValue = defaultFunction) {
-  const _isFunction = (value) => isFunction(value) || isAsyncFunction(value);
-  return getValue(obj, key, defaultValue, _isFunction);
+  return getValue(obj, key, defaultValue, isFunction);
 }
 
 function getAny(obj, key) {
   return getValue(obj, key, defaultUndefined, () => true);
 }
+
 
 module.exports = {
   getAny,
