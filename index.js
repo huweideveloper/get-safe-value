@@ -21,24 +21,26 @@ const defaultGetVal = (value) => value;
 const maxNumber = Math.pow(2, 53) - 1;
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-function getProcessObject(obj, key){
-  if( isNull(key) || isUndefined(key) ){
-    key = "key"+parseInt(Math.random()* 100000000);
+const isCanToArray =  key =>  isString(key) && /[\.|\[]+/g.test(key);
+function getProcessObject(object, k){
+  if( isNull(k) || isUndefined(k) ){
+    k = "randomKey";
     return {
-      _obj:{
-        [key]: obj,
+      obj:{
+        [k]: object,
       },
-      _key: key,
+      key: k,
     }
   }
   return {
-    _obj: obj,
-    _key: key
+    obj: object,
+    key: k
   }
 }
 
 // Gets the value of multiple nested objects
 function getDeepValue(obj, keys) {
+  keys = getKeys(keys);
   let value = obj;
   while ((isObject(value) || isArray(value)) && keys.length > 0) {
     value = value[keys.shift()];
@@ -46,10 +48,9 @@ function getDeepValue(obj, keys) {
   return value;
 }
 
-// Key is a string of words (" array [0]. The name "), into the array keys ([" array ", "0", "name"])
+// Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
-  if( !isString(key) ) return key;
-  if( isString(key) && !(/[\.|[]+/g.test(key)) ) return key;
+  if( isArray(key) ) return key;
   let keys = [];
   key.replace(rePropName, (match, number, quote, subString) => {
     const value = quote
@@ -76,12 +77,10 @@ function getDefaultValue(key, defaultValue, isType) {
   return defaultValue;
 }
 
-function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
-  const { _obj, _key } = getProcessObject(obj, key);
-  if (!isObject(_obj) && !isArray(_obj)) return getDefaultValue(_key, defaultValue, isType);
-  const keys = getKeys(_key);
-  const value = isArray(keys) ? getDeepValue(_obj, keys) : _obj[keys];
-  return isType(value) ? getVal(value) : getDefaultValue(_key, defaultValue, isType);
+function getValue(object, k, defaultValue, isType, getVal = defaultGetVal) {
+  const { obj, key } = getProcessObject(object, k);
+  const value = isArray(key) || isCanToArray(key) ? getDeepValue(obj, key) : obj[key];
+  return isType(value) ? getVal(value) : getDefaultValue(key, defaultValue, isType);
 }
 
 
