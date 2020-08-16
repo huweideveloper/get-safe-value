@@ -89,18 +89,18 @@ describe('getString', function() {
 describe('getNumber', function() {
   it('test getNumber', function() {
 
-    assert.deepStrictEqual(getNumber(null), 0);
-    assert.deepStrictEqual(getNumber(undefined), 0);
-    assert.deepStrictEqual(getNumber("hello world"), 0);
-    assert.deepStrictEqual(getNumber(true), 1);
-    assert.deepStrictEqual(getNumber(false), 0);
-    assert.deepStrictEqual(getNumber(0), 0);
-    assert.deepStrictEqual(getNumber(123), 123);
+    assert.deepStrictEqual(getNumber(null, 'test'), 0);
+    assert.deepStrictEqual(getNumber(undefined, 'test'), 0);
+    assert.deepStrictEqual(getNumber("hello world", 'test'), 0);
+    assert.deepStrictEqual(getNumber(true, 'test'), 1);
+    assert.deepStrictEqual(getNumber(false, 'test'), 0);
+    assert.deepStrictEqual(getNumber(0, 'test'), 0);
+    assert.deepStrictEqual(getNumber(123, 'test'), 123);
     assert.deepStrictEqual(getNumber({}), 0);
     assert.deepStrictEqual(getNumber({age:1, key: 1}), 0);
-    assert.deepStrictEqual(getNumber([]), 0);
+    assert.deepStrictEqual(getNumber([], 'test'), 0);
     assert.deepStrictEqual(getNumber([12,3,4]), 0);
-    assert.deepStrictEqual(getNumber(function(){}), 0);
+    assert.deepStrictEqual(getNumber(function(){}, 'test'), 0);
 
     assert.deepStrictEqual(getNumber(o,'_undef'), 0);
     assert.deepStrictEqual(getNumber(o,'_null'), 0);
@@ -157,7 +157,7 @@ describe('getBoolean', function() {
     assert.deepStrictEqual(getBoolean(123), false);
     assert.deepStrictEqual(getBoolean({}), false);
     assert.deepStrictEqual(getBoolean({age:1, key: 1}), false);
-    assert.deepStrictEqual(getBoolean([]), false);
+    assert.deepStrictEqual(getBoolean([], 'test'), false);
     assert.deepStrictEqual(getBoolean([12,3,4]), false);
     assert.deepStrictEqual(getBoolean(function(){}), false);
 

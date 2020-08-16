@@ -60,27 +60,14 @@ function getKeys(key) {
   });
   return keys;
 }
-
-function getDefaultValue(key, defaultValue, isType) {
-  let value = defaultValue;
-  if (isString(defaultValue)) value = "''";
-  if (isArray(defaultValue)) value = "[]";
-  if (isObject(defaultValue)) value = "{}";
-  const name = isType.name.replace(/(_is|is)/i, "get");
-  console.warn(
-    "Call " +
-      name +
-      " function returns the default:" +
-      value +
-      ", Please check that the data is correct. " + "key is: '" + key +"'"
-  );
-  return defaultValue;
+function getSingleValue(obj, key){
+  return isObject(obj) || isArray(obj) ? obj[key] : obj;
 }
 
 function getValue(object, k, defaultValue, isType, getVal = defaultGetVal) {
   const { obj, key } = getProcessObject(object, k);
-  const value = isArray(key) || isCanToArray(key) ? getDeepValue(obj, key) : obj[key];
-  return isType(value) ? getVal(value) : getDefaultValue(key, defaultValue, isType);
+  const value = isArray(key) || isCanToArray(key) ? getDeepValue(obj, key) : getSingleValue(obj, key);
+  return isType(value) ? getVal(value) : defaultValue;
 }
 
 
