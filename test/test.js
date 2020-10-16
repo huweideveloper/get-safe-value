@@ -1,7 +1,7 @@
 
 'use strict';
 
-const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } = require('../index');
+const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny, getValues } = require('../index');
 const assert = require('assert');
 
 const o = {
@@ -44,6 +44,9 @@ describe('getString', function() {
     assert.deepStrictEqual(getString([12,3,4]), '');
     assert.deepStrictEqual(getString(function(){}), '');
 
+    assert.deepStrictEqual(getString(o,['str', 'obj.str']), ['1','4']);
+    assert.deepStrictEqual(getString(o,['str1', 'obj.str1']), ['','']);
+
     assert.deepStrictEqual(getString(o,'_undef'), '');
     assert.deepStrictEqual(getString(o,'_null'), '');
     assert.deepStrictEqual(getString(o,'str'), '1');
@@ -68,8 +71,6 @@ describe('getString', function() {
     assert.deepStrictEqual(getString(o,'obj.number'), '4');
     assert.deepStrictEqual(getString(o,'obj.obj.obj.str'), '7');
     assert.deepStrictEqual(getString(o,'obj.obj.obj.number'), '7');
-    assert.deepStrictEqual(getString(o,['obj','obj', 'obj','str']), '7');
-    assert.deepStrictEqual(getString(o,['obj','obj', 'obj','number']), '7');
 
     assert.deepStrictEqual(getString(a,'0'), '2');
     assert.deepStrictEqual(getString(a,'1'), '2');
@@ -102,6 +103,9 @@ describe('getNumber', function() {
     assert.deepStrictEqual(getNumber([12,3,4]), 0);
     assert.deepStrictEqual(getNumber(function(){}, 'test'), 0);
 
+    assert.deepStrictEqual(getNumber(o,['number', 'obj.number']), [1,4]);
+    assert.deepStrictEqual(getNumber(o,['number1', 'obj.number1']), [0,0]);
+
     assert.deepStrictEqual(getNumber(o,'_undef'), 0);
     assert.deepStrictEqual(getNumber(o,'_null'), 0);
     assert.deepStrictEqual(getNumber(o,'str'), 1);
@@ -126,8 +130,6 @@ describe('getNumber', function() {
     assert.deepStrictEqual(getNumber(o,'obj.number'), 4);
     assert.deepStrictEqual(getNumber(o,'obj.obj.obj.str'), 7);
     assert.deepStrictEqual(getNumber(o,'obj.obj.obj.number'), 7);
-    assert.deepStrictEqual(getNumber(o,['obj','obj', 'obj','str']), 7);
-    assert.deepStrictEqual(getNumber(o,['obj','obj', 'obj','number']), 7);
 
     assert.deepStrictEqual(getNumber(a,'0'), 2);
     assert.deepStrictEqual(getNumber(a,'1'), 2);
@@ -185,8 +187,6 @@ describe('getBoolean', function() {
     assert.deepStrictEqual(getBoolean(o,'obj.number'), false);
     assert.deepStrictEqual(getBoolean(o,'obj.obj.obj.str'), false);
     assert.deepStrictEqual(getBoolean(o,'obj.obj.obj.number'), false);
-    assert.deepStrictEqual(getBoolean(o,['obj','obj', 'obj','str']), false);
-    assert.deepStrictEqual(getBoolean(o,['obj','obj', 'obj','number']), false);
 
     assert.deepStrictEqual(getBoolean(a,'0'), false);
     assert.deepStrictEqual(getBoolean(a,'1'), false);
@@ -284,7 +284,6 @@ describe('getArray', function() {
     assert.deepStrictEqual(getArray(o,'obj.str'), []);
     assert.deepStrictEqual(getArray(o,'obj.number'), []);
     assert.deepStrictEqual(getArray(o,'obj.obj.obj.str'), []);
-    assert.deepStrictEqual(getArray(o,['obj','obj', 'obj','str']),[]);
     assert.deepStrictEqual(getArray(a,'0'), []);
     assert.deepStrictEqual(getArray(a,'1'), []);
     assert.deepStrictEqual(getArray(a,2), []);
@@ -304,6 +303,16 @@ describe('getFunction', function() {
 
   });
 });
+
+describe('getValues', function() {
+  it('test getValues', function() {
+    assert.deepStrictEqual(getValues(o,['str', 'number'], ['string','number']), ['1',1]);
+    assert.deepStrictEqual(getValues(o,['str', 'number'], ['number','number']), [1,1]);
+    assert.deepStrictEqual(getValues(o,['str', 'number'], ['object','array']), [{},[]]);
+  });
+});
+
+
 
 describe('getAny', function() {
   it('test getAny', function() {

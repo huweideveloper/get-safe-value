@@ -1,7 +1,5 @@
 
 const {
-  isNull,
-  isUndefined,
   isString,
   isNumber,
   isBoolean,
@@ -22,31 +20,20 @@ const maxNumber = Math.pow(2, 53) - 1;
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 const isCanToArray =  key =>  isString(key) && /[\.|\[]+/g.test(key);
-function getProcessObject(object, k){
-  if( isNull(k) || isUndefined(k) ){
-    k = "randomKey";
-    return {
-      obj:{
-        [k]: object,
-      },
-      key: k,
-    }
-  }
-  return {
-    obj: object,
-    key: k
-  }
+const getTypeString = (str) =>{
+  if( !isString(str) ) return '';
+  const index = str.indexOf("is");
+  return str.substr(index+2).toLowerCase();
 }
+const fns = {
+  "string": getString,
+  "number": getNumber,
+  "boolean": getBoolean,
+  "object": getObject,
+  "array": getArray,
+  "function": getFunction,
+};
 
-// Gets the value of multiple nested objects
-function getDeepValue(obj, keys) {
-  keys = getKeys(keys);
-  let value = obj;
-  while ((isObject(value) || isArray(value)) && keys.length > 0) {
-    value = value[keys.shift()];
-  }
-  return value;
-}
 
 // Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
@@ -60,16 +47,47 @@ function getKeys(key) {
   });
   return keys;
 }
-function getSingleValue(obj, key){
-  return isObject(obj) || isArray(obj) ? obj[key] : obj;
+
+function getValues(obj, keys, types, defaultValues) {
+  const array = [];
+  if( isArray(keys) ){
+    if( !isArray(types) ) types = [];
+    if( !isArray(defaultValues) ) defaultValues = [];
+    for( let i = 0; i<keys.length; i++ ){
+      const type = types[i];
+      const fn = getFunction(fns, type);
+      const value = fn(obj, keys[i], defaultValues[i])
+      array.push(value);
+    }
+  }
+  return array;
 }
 
-function getValue(object, k, defaultValue, isType, getVal = defaultGetVal) {
-  const { obj, key } = getProcessObject(object, k);
-  const value = isArray(key) || isCanToArray(key) ? getDeepValue(obj, key) : getSingleValue(obj, key);
+function getSingleValue(obj, key){
+  if( !isObject(obj) && !isArray(obj) ) return obj;
+  return isString(key) || isNumber(key) ? obj[key] : obj;
+}
+
+// Gets the value of multiple nested objects
+function getDeepValue(obj, keys) {
+  keys = getKeys(keys);
+  let value = obj;
+  for( let i = 0; i<keys.length; i++ ){
+    const key = keys[i];
+    value = getSingleValue(value, key);
+  }
+  return value;
+}
+
+function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
+  if( isArray(key) ) {
+    const type = getTypeString(isType.name);
+    const types = new Array(key.length).fill(type);
+    return getValues(obj, key, types, defaultValue);
+  }
+  const value = isCanToArray(key) ? getDeepValue(obj, key) : getSingleValue(obj,key);
   return isType(value) ? getVal(value) : defaultValue;
 }
-
 
 function getString(obj, key, defaultValue = defaultString) {
   const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //The basic data type can be converted to a String by calling the String constructor
@@ -128,4 +146,5 @@ module.exports = {
   getObject,
   getArray,
   getFunction,
+  getValues,
 }
