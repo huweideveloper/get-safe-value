@@ -19,7 +19,7 @@ const defaultGetVal = (value) => value;
 const maxNumber = Math.pow(2, 53) - 1;
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-const isCanToArray =  key =>  isString(key) && /[\.|\[]+/g.test(key);
+const isDeepKey = key =>  isString(key) && /[\.|\[]+/g.test(key);
 const getTypeString = (str) =>{
   if( !isString(str) ) return '';
   const index = str.indexOf("is");
@@ -37,7 +37,6 @@ const fns = {
 
 // Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
-  if( isArray(key) ) return key;
   let keys = [];
   key.replace(rePropName, (match, number, quote, subString) => {
     const value = quote
@@ -49,7 +48,7 @@ function getKeys(key) {
 }
 
 function getValues(obj, keys, types, defaultValues) {
-  const array = [];
+  const values = [];
   if( isArray(keys) ){
     if( !isArray(types) ) types = [];
     if( !isArray(defaultValues) ) defaultValues = [];
@@ -57,10 +56,10 @@ function getValues(obj, keys, types, defaultValues) {
       const type = types[i];
       const fn = getFunction(fns, type);
       const value = fn(obj, keys[i], defaultValues[i])
-      array.push(value);
+      values.push(value);
     }
   }
-  return array;
+  return values;
 }
 
 function getSingleValue(obj, key){
@@ -69,8 +68,8 @@ function getSingleValue(obj, key){
 }
 
 // Gets the value of multiple nested objects
-function getDeepValue(obj, keys) {
-  keys = getKeys(keys);
+function getDeepValue(obj, key) {
+  const keys = getKeys(key);
   let value = obj;
   for( let i = 0; i<keys.length; i++ ){
     const key = keys[i];
@@ -85,7 +84,7 @@ function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
     const types = new Array(key.length).fill(type);
     return getValues(obj, key, types, defaultValue);
   }
-  const value = isCanToArray(key) ? getDeepValue(obj, key) : getSingleValue(obj,key);
+  const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj,key);
   return isType(value) ? getVal(value) : defaultValue;
 }
 
