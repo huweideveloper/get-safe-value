@@ -15,7 +15,7 @@ const defaultBoolean = false;
 const defaultObject = {};
 const defaultArray = [];
 const defaultFunction = function() {};
-const defaultGetVal = (value) => value;
+const defaultGetVal = value => value;
 const maxNumber = Math.pow(2, 53) - 1;
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
@@ -34,37 +34,18 @@ const fns = {
   "function": getFunction,
 };
 
-
 // Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
-  let keys = [];
-  key.replace(rePropName, (match, number, quote, subString) => {
-    const value = quote
-      ? subString.replace(reEscapeChar, "$1")
-      : number || match;
-    keys.push(value);
-  });
-  return keys;
-}
-
-function getValues(obj, keys, types, defaultValues) {
-  const values = [];
-  if( isArray(keys) ){
-    if( !isArray(types) ) types = [];
-    if( !isArray(defaultValues) ) defaultValues = [];
-    for( let i = 0; i<keys.length; i++ ){
-      const type = types[i];
-      const fn = getFunction(fns, type);
-      const value = fn(obj, keys[i], defaultValues[i])
-      values.push(value);
-    }
+  const keys = [];
+  if( isString(key) ){
+    key.replace(rePropName, (match, number, quote, subString) => {
+      const value = quote
+        ? subString.replace(reEscapeChar, "$1")
+        : number || match;
+      keys.push(value);
+    });
   }
-  return values;
-}
-
-function getSingleValue(obj, key){
-  if( !isObject(obj) && !isArray(obj) ) return obj;
-  return isString(key) || isNumber(key) ? obj[key] : obj;
+  return keys;
 }
 
 // Gets the value of multiple nested objects
@@ -78,11 +59,33 @@ function getDeepValue(obj, key) {
   return value;
 }
 
+function getSingleValue(obj, key){
+  if( !isObject(obj) && !isArray(obj) ) return obj;
+  return isString(key) || isNumber(key) ? obj[key] : obj;
+}
+
+function getValues(obj, keys, types, defaultValues) {
+  const values = [];
+  if (isArray(keys)) {
+      if (!isArray(defaultValues)) defaultValues = [];
+      const getType = (types, index) => {
+        if( !isArray(types) ) return types;
+        const length = types.length;
+        return index < length ? types[index] : types[length-1];
+      }
+      for (let i = 0; i < keys.length; i++) {
+          const type = getType(types,i);
+          const fn = getFunction(fns, type, getAny);
+          const value = fn(obj, keys[i], defaultValues[i])
+          values.push(value);
+      }
+  }
+  return values;
+}
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
   if( isArray(key) ) {
     const type = getTypeString(isType.name);
-    const types = new Array(key.length).fill(type);
-    return getValues(obj, key, types, defaultValue);
+    return getValues(obj, key, type, defaultValue);
   }
   const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj,key);
   return isType(value) ? getVal(value) : defaultValue;
@@ -97,13 +100,12 @@ function getNumber(obj, key, defaultValue = defaultNumber) {
   const _isNumber = (value) => {
     value = Number(value);
     return (
-      isNumber(value) &&
       isFinite(value) &&
       value < maxNumber &&
       value > -maxNumber
     );
   };
-  return getValue(obj, key, defaultValue, _isNumber, (value) => Number(value));
+  return getValue(obj, key, defaultValue, _isNumber, value => Number(value));
 }
 
 function getBoolean(obj, key, defaultValue = defaultBoolean) {
@@ -117,7 +119,7 @@ function getBoolean(obj, key, defaultValue = defaultBoolean) {
       value === "true"
     );
   };
-  return getValue(obj, key, defaultValue, _isBoolean, (value) => Boolean(value) );
+  return getValue(obj, key, defaultValue, _isBoolean, value => Boolean(value) );
 }
 
 function getObject(obj, key, defaultValue = defaultObject) {

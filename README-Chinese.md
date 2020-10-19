@@ -18,86 +18,71 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
 
 ## 使用
 
+
 ```js
-import { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } from 'get-safe-value';
+import { getString, getNumber, getBoolean, getObject, getArray, getFunction, getValues, getAny } from 'get-safe-value';
 // or
-// const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } =  require('get-safe-value');
+// const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getValues, getAny } =  require('get-safe-value');
 const obj = {
-	str: "a",
-	number: 10,
-	bool: true,
-	array: ["1", 1, true, [1, 2]],
-	child: {
-		str: "b",
-		number: "20",
-		array: [{
-			str: "c",
-			number: 30
-			}, {
-			str: "d",
-			number: 40
-		}],
-		n: NaN,
-		maxNumber: Math.pow(2, 60),
+	name: 'lucas',
+	age: 30,
+	brother: [
+		{ 
+			name: 'jack',
+			age: 25,
+		}
+	],
+	getName: ()=>{
+		return this.name;
 	},
-	fn: function(age) {
-		return age
-	}
 }
 // getString
-console.log(getString(obj, "str")); //'a'
-console.log(getString(obj, "number")); //'10' 字符串 数组 和布尔值，都会调用String构造函数转成String类型
-console.log(getString(obj, "array")); //''
-console.log(getString(obj, "child", "hello")); // 'hello' 
-console.log(getString(obj, "array")); //''
-console.log(getString(obj, "child")); //''
-console.log(getString(obj, "child.str")); //'b'
-console.log(getString(obj, "child.array[0].str")); //'c'
-console.log(getString(obj, ["child", "str"])); //'b'
-console.log(getString(obj, ["child", "array", 0, "str"])); //'c'
-console.log(getString("hello")); //'hello'
-console.log(getString(null)); //''
-console.log(getString({})); //''
-console.log(getString([])); //''
+console.log(getString(obj, "name")); // 'lucas'
+console.log(getString(obj, "age")); // '30'  字符串 数组 和布尔值，都会调用String构造函数转成String类型
+console.log(getString(obj, "helloWorld")); // ''
+console.log(getString(obj, "helloWorld", "hello")); // "hello"为默认值，当helloWorld属性不是字符串时返回默认值
+console.log(getString(obj, "brother[0].name")); // 'jack'
+console.log(getString(obj, ["name", "brother[0].name"])); // ["lucas", "jack"]
 
 //getNumber
-console.log(getNumber(obj, "number")); //10
-console.log(getNumber(obj, "str")); //0 类型不匹配默认返回Number:0
-console.log(getNumber(obj, "child.number")); //20, 字符串会调用Number构造函数转成Number类型
-console.log(getNumber(obj, "child.n")); //0 NaN不是有效数字
-console.log(getNumber(obj, "child.maxNumber")); //0 超过了最大安全的number值: Math.pow(2, 53) - 1
-console.log(getNumber("hello")); //0
-console.log(getNumber("123")); //123
-console.log(getNumber(null)); //0
-console.log(getNumber({})); //0
-console.log(getNumber([])); //0
+console.log(getNumber(obj, "age")); //30
+console.log(getNumber(obj, "name")); //0
 
 //getBoolean
-console.log(getBoolean(obj, "bool")) // true
-console.log(getBoolean(obj, "number")) // false
+console.log(getBoolean({is: true}, "is")) // true
+console.log(getBoolean({is: false}, "is")) // false
+console.log(getBoolean({is: false}, "hello")) // false
 
 //getObject
-console.log(getObject(obj, "str")) // {}
-console.log(getObject(obj, "child")) // {str: "b", number: "20",……}
+console.log(getObject(obj, "brother[0]")) // { name:'jack', age: 25 }
+console.log(getObject(obj, "hello")) // {}
 
 //getArray
-console.log(getArray(obj, "array")) // ["1", 1, true, [1, 2]]
-console.log(getArray(obj, "array[3]")) // [1, 2]
+console.log(getArray(obj, "brother")) // [{ name:'jack', age: 25 }]
+console.log(getArray(obj, "name")) // []
 
 //getFunction
-console.log(getFunction(obj, "fn")) // function(age) { return age }
-console.log(getFunction(obj, "number")) // function(){}
+console.log(getFunction(obj, "name")) // function(){}
+console.log(getFunction(obj, "getName")) // function getName(){}
 
 //getAny
-console.log(getAny(obj, "str")) // 'a'
-console.log(getAny(obj, "number")) // 10,
+console.log(getAny(obj, "name")) // 'lucas'
+console.log(getAny(obj, "age")) // 30,
 console.log(getAny(obj, "hello")) // undefined
 
+//getValues
+console.log(getValues(obj, ["name", "age"], ["string", "number"])) // ['lucas', 30]
+console.log(getValues(obj, ["name", "age"], "string")) // ['lucas', '30']
+console.log(getValues(obj, ["name", "age"], ["string"])) // ['lucas', '30']
+console.log(getValues(obj, ["name", "age"])) // ['lucas', 30]
+console.log(getValues(obj, ["brother", "getName"], ["array", "function"])) // [[{ name:'jack', age: 25 }], function getName(){}]
+console.log(getValues(obj, ["brother[0].age", "getName"], ["number", "object"])) // [25, {}]
 ```
+
 
 ## 方法
 
-| 方法 | 返回值类型 |
+| method | Return type |
 | ------ | ------ |
 | getString | String |
 | getNumber | Number |
@@ -105,6 +90,7 @@ console.log(getAny(obj, "hello")) // undefined
 | getObject | Object |
 | getArray | Array |
 | getFunction | Function || asyncFunction |
+| getValues | Array |
 | getAny | Any |
 
 

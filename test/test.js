@@ -306,7 +306,15 @@ describe('getFunction', function() {
 
 describe('getValues', function() {
   it('test getValues', function() {
-    assert.deepStrictEqual(getValues(o,['str', 'number'], ['string','number']), ['1',1]);
+    const obj = {
+      "age": 10,
+      "name": "lucas",
+    }
+    assert.deepStrictEqual(getValues(obj,['age', 'name'], ), [10,'lucas']);
+    assert.deepStrictEqual(getValues(obj,['age', 'name'], "string"), ['10','lucas']);
+    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['number']), [10,0]);
+    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['string']), ['10','lucas']);
+    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['number'], ["", 11]), [10,11]);
     assert.deepStrictEqual(getValues(o,['str', 'number'], ['number','number']), [1,1]);
     assert.deepStrictEqual(getValues(o,['str', 'number'], ['object','array']), [{},[]]);
   });
