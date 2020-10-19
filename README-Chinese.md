@@ -20,9 +20,9 @@ Install with [npm](https://www.npmjs.com/package/get-safe-value)
 
 
 ```js
-import { getString, getNumber, getBoolean, getObject, getArray, getFunction, getValues, getAny } from 'get-safe-value';
+import { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } from 'get-safe-value';
 // or
-// const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getValues, getAny } =  require('get-safe-value');
+// const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } =  require('get-safe-value');
 const obj = {
 	name: 'lucas',
 	age: 30,
@@ -70,13 +70,6 @@ console.log(getAny(obj, "name")) // 'lucas'
 console.log(getAny(obj, "age")) // 30,
 console.log(getAny(obj, "hello")) // undefined
 
-//getValues
-console.log(getValues(obj, ["name", "age"], ["string", "number"])) // ['lucas', 30]
-console.log(getValues(obj, ["name", "age"], "string")) // ['lucas', '30']
-console.log(getValues(obj, ["name", "age"], ["string"])) // ['lucas', '30']
-console.log(getValues(obj, ["name", "age"])) // ['lucas', 30]
-console.log(getValues(obj, ["brother", "getName"], ["array", "function"])) // [[{ name:'jack', age: 25 }], function getName(){}]
-console.log(getValues(obj, ["brother[0].age", "getName"], ["number", "object"])) // [25, {}]
 ```
 
 
@@ -90,7 +83,6 @@ console.log(getValues(obj, ["brother[0].age", "getName"], ["number", "object"]))
 | getObject | Object, Array |
 | getArray | Array |
 | getFunction | Function, Array |
-| getValues | Array |
 | getAny | Any, Array |
 
 

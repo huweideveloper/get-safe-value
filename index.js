@@ -52,9 +52,8 @@ function getKeys(key) {
 function getDeepValue(obj, key) {
   const keys = getKeys(key);
   let value = obj;
-  for( let i = 0; i<keys.length; i++ ){
-    const key = keys[i];
-    value = getSingleValue(value, key);
+  while( keys.length > 0 ){
+    value = getSingleValue(value, keys.shift());
   }
   return value;
 }
@@ -147,5 +146,4 @@ module.exports = {
   getObject,
   getArray,
   getFunction,
-  getValues,
 }

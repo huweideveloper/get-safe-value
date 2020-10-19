@@ -1,7 +1,7 @@
 
 'use strict';
 
-const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny, getValues } = require('../index');
+const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } = require('../index');
 const assert = require('assert');
 
 const o = {
@@ -301,22 +301,6 @@ describe('getFunction', function() {
     assert.deepStrictEqual(getFunction(o,'fn'), o.fn);
     assert.deepStrictEqual(getFunction(o,'fnAsync', defaultFunction), o.fnAsync);
 
-  });
-});
-
-describe('getValues', function() {
-  it('test getValues', function() {
-    const obj = {
-      "age": 10,
-      "name": "lucas",
-    }
-    assert.deepStrictEqual(getValues(obj,['age', 'name'], ), [10,'lucas']);
-    assert.deepStrictEqual(getValues(obj,['age', 'name'], "string"), ['10','lucas']);
-    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['number']), [10,0]);
-    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['string']), ['10','lucas']);
-    assert.deepStrictEqual(getValues(obj,['age', 'name'], ['number'], ["", 11]), [10,11]);
-    assert.deepStrictEqual(getValues(o,['str', 'number'], ['number','number']), [1,1]);
-    assert.deepStrictEqual(getValues(o,['str', 'number'], ['object','array']), [{},[]]);
   });
 });
 
