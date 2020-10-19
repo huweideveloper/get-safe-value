@@ -84,13 +84,13 @@ console.log(getValues(obj, ["brother[0].age", "getName"], ["number", "object"]))
 
 | method | Return type |
 | ------ | ------ |
-| getString | String or Array<string> |
-| getNumber | Number or Array<number> |
-| getBoolean | Boolean or Array<boolean> |
-| getObject | Object or Array<object> |
-| getArray | Array or Array<array> |
-| getFunction | Function or Array<function> |
-| getValues | Array or Array<any> |
+| getString | String, Array<string> |
+| getNumber | Number, Array<number> |
+| getBoolean | Boolean, Array<boolean> |
+| getObject | Object, Array<object> |
+| getArray | Array, Array<array> |
+| getFunction | Function, Array<function> |
+| getValues | Array, Array<any> |
 | getAny | Any |
 
 
