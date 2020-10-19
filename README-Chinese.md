@@ -87,7 +87,7 @@ console.log(getValues(obj, ["brother[0].age", "getName"], ["number", "object"]))
 | getString | String, Array |
 | getNumber | Number, Array |
 | getBoolean | Boolean, Array |
-| getObject | Object, ArArray |
+| getObject | Object, Array |
 | getArray | Array |
 | getFunction | Function, Array |
 | getValues | Array |
