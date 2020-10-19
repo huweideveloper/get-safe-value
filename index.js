@@ -67,13 +67,13 @@ function getValues(obj, keys, types, defaultValues) {
   const values = [];
   if (isArray(keys)) {
       if (!isArray(defaultValues)) defaultValues = [];
-      const getType = (types, index) => {
+      const getType = index => {
         if( !isArray(types) ) return types;
         const length = types.length;
         return index < length ? types[index] : types[length-1];
       }
       for (let i = 0; i < keys.length; i++) {
-          const type = getType(types,i);
+          const type = getType(i);
           const fn = getFunction(fns, type, getAny);
           const value = fn(obj, keys[i], defaultValues[i])
           values.push(value);
