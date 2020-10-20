@@ -6,6 +6,8 @@ const {
   isObject,
   isArray,
   isFunction,
+  isNull,
+  isUndefined,
 } = require("validate-data-type");
 
 const defaultUndefined = undefined;
@@ -46,21 +48,11 @@ function getDeepValue(obj, key) {
 }
 
 function getSingleValue(obj, key) {
-  if (!isObject(obj) && !isArray(obj)) return obj;
-  return isString(key) || isNumber(key) ? obj[key] : obj;
-}
-
-function getValues(obj, keys, defaultValue, isType, getVal) {
-  const values = [];
-  for (let i = 0; i < keys.length; i++) {
-    const value = getValue(obj, keys[i], defaultValue, isType, getVal)
-    values.push(value);
-  }
-  return values;
+  return (isObject(obj) || isArray(obj)) && !isNull(key) && !isUndefined(key) ? obj[key] : obj;
 }
 
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
-  if (isArray(key)) return getValues(obj, key, defaultValue, isType, getVal);
+  if (isArray(key)) return key.map(k=> getValue(obj, k, defaultValue, isType, getVal));
   const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj, key);
   return isType(value) ? getVal(value) : defaultValue;
 }
