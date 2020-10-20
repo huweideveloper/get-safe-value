@@ -14,30 +14,17 @@ const defaultNumber = 0;
 const defaultBoolean = false;
 const defaultObject = {};
 const defaultArray = [];
-const defaultFunction = function() {};
+const defaultFunction = function () { };
 const defaultGetVal = value => value;
 const maxNumber = Math.pow(2, 53) - 1;
 const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-const isDeepKey = key =>  isString(key) && /[\.|\[]+/g.test(key);
-const getTypeString = (str) =>{
-  if( !isString(str) ) return '';
-  const index = str.indexOf("is");
-  return str.substr(index+2).toLowerCase();
-}
-const fns = {
-  "string": getString,
-  "number": getNumber,
-  "boolean": getBoolean,
-  "object": getObject,
-  "array": getArray,
-  "function": getFunction,
-};
+const isDeepKey = key => isString(key) && /[\.|\[]+/g.test(key);
 
 // Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
 function getKeys(key) {
   const keys = [];
-  if( isString(key) ){
+  if (isString(key)) {
     key.replace(rePropName, (match, number, quote, subString) => {
       const value = quote
         ? subString.replace(reEscapeChar, "$1")
@@ -52,47 +39,35 @@ function getKeys(key) {
 function getDeepValue(obj, key) {
   const keys = getKeys(key);
   let value = obj;
-  while( keys.length > 0 ){
+  while (keys.length > 0) {
     value = getSingleValue(value, keys.shift());
   }
   return value;
 }
 
-function getSingleValue(obj, key){
-  if( !isObject(obj) && !isArray(obj) ) return obj;
+function getSingleValue(obj, key) {
+  if (!isObject(obj) && !isArray(obj)) return obj;
   return isString(key) || isNumber(key) ? obj[key] : obj;
 }
 
-function getValues(obj, keys, types, defaultValues) {
+function getValues(obj, keys, defaultValue, isType, getVal) {
   const values = [];
-  if (isArray(keys)) {
-      if (!isArray(defaultValues)) defaultValues = [];
-      const getType = index => {
-        if( !isArray(types) ) return types;
-        const length = types.length;
-        return index < length ? types[index] : types[length-1];
-      }
-      for (let i = 0; i < keys.length; i++) {
-          const type = getType(i);
-          const fn = getFunction(fns, type, getAny);
-          const value = fn(obj, keys[i], defaultValues[i])
-          values.push(value);
-      }
+  for (let i = 0; i < keys.length; i++) {
+    const value = getValue(obj, keys[i], defaultValue, isType, getVal)
+    values.push(value);
   }
   return values;
 }
+
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
-  if( isArray(key) ) {
-    const type = getTypeString(isType.name);
-    return getValues(obj, key, type, defaultValue);
-  }
-  const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj,key);
+  if (isArray(key)) return getValues(obj, key, defaultValue, isType, getVal);
+  const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj, key);
   return isType(value) ? getVal(value) : defaultValue;
 }
 
 function getString(obj, key, defaultValue = defaultString) {
   const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //The basic data type can be converted to a String by calling the String constructor
-  return getValue(obj, key, defaultValue, _isString, (value) => String(value));
+  return getValue(obj, key, defaultValue, _isString, value => String(value));
 }
 
 function getNumber(obj, key, defaultValue = defaultNumber) {
@@ -118,7 +93,7 @@ function getBoolean(obj, key, defaultValue = defaultBoolean) {
       value === "true"
     );
   };
-  return getValue(obj, key, defaultValue, _isBoolean, value => Boolean(value) );
+  return getValue(obj, key, defaultValue, _isBoolean, value => Boolean(value));
 }
 
 function getObject(obj, key, defaultValue = defaultObject) {
