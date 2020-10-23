@@ -68,107 +68,94 @@
         const isWeakSet = value => isType(value, 'WeakSet');
 
 
-        const defaultUndefined = undefined;
-        const defaultString = "";
-        const defaultNumber = 0;
-        const defaultBoolean = false;
-        const defaultObject = {};
-        const defaultArray = [];
-        const defaultFunction = function () { };
-        const defaultGetVal = value => value;
-        // const maxNumber = Math.pow(2, 53) - 1;
-        const reEscapeChar = /\\(\\)?/g;
-        const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-        const isDeepKey = key => isString(key) && /[\.|\[]+/g.test(key);
+        const week1 = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        const week2 = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+        const YEAR = 'yyyy';
+        const SINGLEYEAR = 'yy';
+        const MM = 'mm';
+        const M = 'm';
+        const DAY = 'dd';
+        const SINGLEDAY = 'd';
+        const HOUR = 'hh';
+        const SINGLEHOUR = 'h';
+        const SECOUND = 'ss';
+        const SINGLESECOUND = 's';
+        const WEEK1 = '周';
+        const WEEK2 = '星期';
+        const WEEK3 = 'week';
+        const WEEK4 = 'w';
+        const AM = 'am';
+        const PM = 'pm';
+        const BLANK = ' ';
 
-        // Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
-        function getKeys(key) {
-            const keys = [];
-            if (isString(key)) {
-                key.replace(rePropName, (match, number, quote, subString) => {
-                    const value = quote
-                        ? subString.replace(reEscapeChar, "$1")
-                        : number || match;
-                    keys.push(value);
-                });
+        const defaultFormat = 'yyyy-mm-dd hh:mm:ss';
+        const addZero = value => value >= 0 && value < 10 ? '0' + value : value;
+        function getDate(timestamps) {
+            const d = isValidNumber(timestamps) ? new Date(timestamps) : new Date();
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const day = d.getDate();
+            const hours = d.getHours();
+            const minutes = d.getMinutes();
+            const seconds = d.getSeconds();
+            const week = d.getDay();
+            const milliseconds = d.getMilliseconds();
+            return { year, month, day, hours, minutes, seconds, milliseconds, week }
+        }
+
+        //判断是否是年月日的mm
+        function isMouth(item) {
+            if (item.includes(MM)) return item.includes(YEAR) || item.includes(DAY);
+            if (item.includes(M)) return item.includes(SINGLEYEAR) || item.includes(SINGLEDAY);
+        }
+        //判断是否是时分秒的mm
+        function isMinute(item) {
+            if (item.includes(MM)) return item.includes(HOUR) || item.includes(SECOUND);
+            if (item.includes(M)) return item.includes(SINGLEHOUR) || item.includes(SINGLESECOUND);
+        }
+        function getNoon(hour) {
+            return hour > 12 ? '下午' : '上午';
+        }
+
+        /**
+         * 
+         * @param {number} timestamps 时间戳
+         * @param {string} format 日期格式
+         * @returns {string}
+         */
+        function format(timestamps, formatType = defaultFormat) {
+            const { year, month, day, hours, minutes, seconds, week } = getDate(timestamps);
+            formatType = formatType.split(BLANK);
+            for (let i = 0; i < formatType.length; i++) {
+                let item = formatType[i];
+                //年月日
+                if (isMouth(item)) item = item.replace(MM, addZero(month));
+                if (isMouth(item)) item = item.replace(M, month);
+                if (item.includes(YEAR)) item = item.replace(YEAR, year);
+                if (item.includes(SINGLEYEAR)) item = item.replace(SINGLEYEAR, year.toString().substr(2));
+                if (item.includes(DAY)) item = item.replace(DAY, addZero(day));
+                if (item.includes(SINGLEDAY)) item = item.replace(SINGLEDAY, day);
+                //时分秒
+                if (isMinute(item)) item = item.replace(MM, addZero(minutes));
+                if (isMinute(item)) item = item.replace(M, minutes);
+                if (item.includes(HOUR)) item = item.replace(HOUR, addZero(hours));
+                if (item.includes(SINGLEHOUR)) item = item.replace(SINGLEHOUR, hours);
+                if (item.includes(SECOUND)) item = item.replace(SECOUND, addZero(seconds));
+                if (item.includes(SINGLESECOUND)) item = item.replace(SINGLESECOUND, seconds);
+                //星期
+                if (item.includes(WEEK1)) item = item.replace(WEEK1, week1[week - 1]);
+                if (item.includes(WEEK3)) item = item.replace(WEEK3, week1[week - 1]);
+                if (item.includes(WEEK4)) item = item.replace(WEEK4, week1[week - 1]);
+                if (item.includes(WEEK2)) item = item.replace(WEEK2, week2[week - 1]);
+                //上午下午
+                if (item.includes(AM)) item = item.replace(AM, getNoon(hours));
+                if (item.includes(PM)) item = item.replace(PM, getNoon(hours));
+                formatType[i] = item;
             }
-            return keys;
+            return formatType.join(BLANK);
         }
 
-        // Gets the value of multiple nested objects
-        function getDeepValue(obj, key) {
-            const keys = getKeys(key);
-            let value = obj;
-            while (keys.length > 0) {
-                value = getSingleValue(value, keys.shift());
-            }
-            return value;
-        }
-
-        function getSingleValue(obj, key) {
-            return (isObject(obj) || isArray(obj)) && !isNull(key) && !isUndefined(key) ? obj[key] : obj;
-        }
-
-        function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
-            if (isArray(key)) return key.map(k => getValue(obj, k, defaultValue, isType, getVal));
-            const value = isDeepKey(key) ? getDeepValue(obj, key) : getSingleValue(obj, key);
-            return isType(value) ? getVal(value) : defaultValue;
-        }
-
-        function getString(obj, key, defaultValue = defaultString) {
-            const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //The basic data type can be converted to a String by calling the String constructor
-            return getValue(obj, key, defaultValue, _isString, value => String(value));
-        }
-
-        function getNumber(obj, key, defaultValue = defaultNumber) {
-            const _isNumber = (value) => {
-                value = Number(value);
-                return (
-                    isFinite(value) &&
-                    value < maxNumber &&
-                    value > -maxNumber
-                );
-            };
-            return getValue(obj, key, defaultValue, _isNumber, value => Number(value));
-        }
-
-        function getBoolean(obj, key, defaultValue = defaultBoolean) {
-            const _isBoolean = (value) => {
-                if (isString(value)) value = value.toLowerCase();
-                return (
-                    isBoolean(value) ||
-                    value === 0 ||
-                    value === 1 ||
-                    value === "false" ||
-                    value === "true"
-                );
-            };
-            return getValue(obj, key, defaultValue, _isBoolean, value => Boolean(value));
-        }
-
-        function getObject(obj, key, defaultValue = defaultObject) {
-            return getValue(obj, key, defaultValue, isObject);
-        }
-
-        function getArray(obj, key, defaultValue = defaultArray) {
-            return getValue(obj, key, defaultValue, isArray);
-        }
-
-        function getFunction(obj, key, defaultValue = defaultFunction) {
-            return getValue(obj, key, defaultValue, isFunction);
-        }
-
-        function getAny(obj, key) {
-            return getValue(obj, key, defaultUndefined, () => true);
-        }
-
-
-        const o = {
-            name: 'hello',
-            age: 30
-        }
-
-        console.log(getString(o, ['name', 'age']))
+        console.log(format())
 
 
 
