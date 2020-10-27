@@ -23,7 +23,6 @@ const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 const isDeepKey = key => isString(key) && /[\.|\[]+/g.test(key);
 
-
 function getKeys(key) {
   const keys = [];
   if (isString(key)) {
