@@ -23,7 +23,7 @@ const reEscapeChar = /\\(\\)?/g;
 const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 const isDeepKey = key => isString(key) && /[\.|\[]+/g.test(key);
 
-// Key is a string of words (" array[0].name "), into the array keys ([" array ", "0", "name"])
+
 function getKeys(key) {
   const keys = [];
   if (isString(key)) {
@@ -37,7 +37,6 @@ function getKeys(key) {
   return keys;
 }
 
-// Gets the value of multiple nested objects
 function getDeepValue(obj, key) {
   const keys = getKeys(key);
   let value = obj;
@@ -58,7 +57,7 @@ function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
 }
 
 function getString(obj, key, defaultValue = defaultString) {
-  const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value); //The basic data type can be converted to a String by calling the String constructor
+  const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value);
   return getValue(obj, key, defaultValue, _isString, value => String(value));
 }
 
