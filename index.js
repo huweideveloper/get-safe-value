@@ -18,35 +18,21 @@ const defaultObject = {};
 const defaultArray = [];
 const defaultFunction = function () { };
 const defaultGetVal = value => value;
-const maxNumber = Math.pow(2, 53) - 1;
-const reEscapeChar = /\\(\\)?/g;
-const rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-const isDeepKey = key => isString(key) && /[\.|\[]+/g.test(key);
+const matchPropName = /[^.\[\]]+/g;
+const isDeepKey = key => isString(key) && /[\.\[\]]+/g.test(key);
 
-function getKeys(key) {
-  const keys = [];
-  if (isString(key)) {
-    key.replace(rePropName, (match, number, quote, subString) => {
-      const value = quote
-        ? subString.replace(reEscapeChar, "$1")
-        : number || match;
-      keys.push(value);
-    });
-  }
-  return keys;
-}
 
 function getDeepValue(obj, key) {
-  const keys = getKeys(key);
+  const keys = key.match(matchPropName) || [];
   let value = obj;
-  while (keys.length > 0) {
+  while (keys.length) {
     value = getSingleValue(value, keys.shift());
   }
   return value;
 }
 
 function getSingleValue(obj, key) {
-  return (isObject(obj) || isArray(obj)) && !isNull(key) && !isUndefined(key) ? obj[key] : obj;
+  if( isObject(obj) || isArray(obj) ) return obj[key];
 }
 
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
@@ -56,24 +42,17 @@ function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
 }
 
 function getString(obj, key, defaultValue = defaultString) {
-  const _isString = (value) => isString(value) || isNumber(value) || isBoolean(value);
+  const _isString = value => isString(value) || isNumber(value) || isBoolean(value);
   return getValue(obj, key, defaultValue, _isString, value => String(value));
 }
 
 function getNumber(obj, key, defaultValue = defaultNumber) {
-  const _isNumber = (value) => {
-    value = Number(value);
-    return (
-      isFinite(value) &&
-      value < maxNumber &&
-      value > -maxNumber
-    );
-  };
+  const _isNumber = value => isFinite(Number(value));
   return getValue(obj, key, defaultValue, _isNumber, value => Number(value));
 }
 
 function getBoolean(obj, key, defaultValue = defaultBoolean) {
-  const _isBoolean = (value) => {
+  const _isBoolean = value => {
     if (isString(value)) value = value.toLowerCase();
     return (
       isBoolean(value) ||
