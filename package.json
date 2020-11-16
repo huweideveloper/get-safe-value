@@ -27,6 +27,6 @@
         "mocha": "^3.5.3",
         "nyc": "^11.4.1",
         "rollup": "^2.33.2",
-        "typescript": "^4.0.5"
+        "rollup-plugin-terser": "^7.0.2"
     }
 }

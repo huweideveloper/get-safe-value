@@ -1,17 +1,15 @@
-const path = require("path");
+const { resolve } = require("path");
 const buble = require("@rollup/plugin-buble");
-const resolve = (filePath)=> {
-    return path.resolve(__dirname, "./"+filePath)
-}
-
+const { terser } = require("rollup-plugin-terser");
 module.exports = {
-    input: resolve('src/index.ts'),
+    input: resolve(__dirname, './src/index.js'),
     output:{
         name: "get-safe-value",
-        file: resolve("index.js"),
+        file: resolve(__dirname, './index.js'),
         format: "umd",
     },
     plugins:[
-        buble()
+        buble(),
+        terser()
     ]
 }

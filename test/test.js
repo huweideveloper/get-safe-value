@@ -1,7 +1,7 @@
 
 'use strict';
 
-const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } = require('../index');
+const { getString, getNumber, getBoolean, getObject, getArray, getFunction, getAny } = require('../src/index');
 const assert = require('assert');
 
 const o = {
@@ -264,9 +264,8 @@ describe('getArray', function() {
 describe('getFunction', function() {
   it('test getFunction', function() {
     const defaultFunction = function(){};
-    assert.deepStrictEqual(getFunction(o,'_undef', defaultFunction), defaultFunction);
     assert.deepStrictEqual(getFunction(o,'fn'), o.fn);
-    assert.deepStrictEqual(getFunction(o,'fnAsync', defaultFunction), o.fnAsync);
+    assert.deepStrictEqual(getFunction(o,'fnAsync'), o.fnAsync);
 
   });
 });
