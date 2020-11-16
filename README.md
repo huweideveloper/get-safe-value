@@ -38,7 +38,6 @@ const obj = {
 console.log(getString(obj, "name")); // 'lucas'
 console.log(getString(obj, "age")); // '30'  String array and Boolean, both call String constructor to String type
 console.log(getString(obj, "helloWorld")); // ''
-console.log(getString(obj, "helloWorld", "hello")); //hello  A third parameter is the default value, return the default value if the value of String type can not be obtained correctly.
 console.log(getString(obj, "brother[0].name")); // 'jack'
 console.log(getString(obj, ["name", "brother[0].name"])); // ["lucas", "jack"]
 

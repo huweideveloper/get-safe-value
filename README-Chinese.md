@@ -40,7 +40,6 @@ const obj = {
 console.log(getString(obj, "name")); // 'lucas'
 console.log(getString(obj, "age")); // '30'  字符串 数组 和布尔值，都会调用String构造函数转成String类型
 console.log(getString(obj, "helloWorld")); // ''
-console.log(getString(obj, "helloWorld", "hello")); // "hello"为默认值，当helloWorld属性不是字符串时返回默认值
 console.log(getString(obj, "brother[0].name")); // 'jack'
 console.log(getString(obj, ["name", "brother[0].name"])); // ["lucas", "jack"]
 
