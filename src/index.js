@@ -1,5 +1,3 @@
-
-
 const {
   isString,
   isNumber,
@@ -9,6 +7,12 @@ const {
   isFunction,
 } = require("validate-data-type");
 
+const defaultString = "";
+const defaultNumber = 0;
+const defaultBoolean = false;
+const defaultObject = {};
+const defaultArray = [];
+const defaultFunction = ()=>{};
 const defaultGetVal = value => value;
 const propName = /[^.\[\]]+/g;
 const isDeepKey = key => isString(key) && /[\.\[\]]+/g.test(key);
@@ -34,12 +38,12 @@ function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {
 
 function getString(obj, key) {
   const _isString = value => isString(value) || isNumber(value) || isBoolean(value);
-  return getValue(obj, key, "", _isString, value => String(value));
+  return getValue(obj, key, defaultString, _isString, value => String(value));
 }
 
 function getNumber(obj, key) {
   const _isNumber = value => isFinite(Number(value));
-  return getValue(obj, key, 0, _isNumber, value => Number(value));
+  return getValue(obj, key, defaultNumber, _isNumber, value => Number(value));
 }
 
 function getBoolean(obj, key) {
@@ -53,19 +57,19 @@ function getBoolean(obj, key) {
       value === "true"
     );
   };
-  return getValue(obj, key, false, _isBoolean, value => Boolean(value));
+  return getValue(obj, key, defaultBoolean, _isBoolean, value => Boolean(value));
 }
 
 function getObject(obj, key) {
-  return getValue(obj, key, {}, isObject);
+  return getValue(obj, key, defaultObject, isObject);
 }
 
 function getArray(obj, key) {
-  return getValue(obj, key, [], isArray);
+  return getValue(obj, key, defaultArray, isArray);
 }
 
 function getFunction(obj, key) {
-  return getValue(obj, key, ()=>{}, isFunction);
+  return getValue(obj, key, defaultFunction, isFunction);
 }
 
 function getAny(obj, key) {

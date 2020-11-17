@@ -1,6 +1,6 @@
 {
     "name": "get-safe-value",
-    "version": "1.4.3",
+    "version": "1.4.5",
     "description": "A library of utility functions that can safely retrieve values",
     "main": "index.js",
     "scripts": {
