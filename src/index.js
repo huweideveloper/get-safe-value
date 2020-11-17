@@ -13,7 +13,6 @@ const defaultGetVal = value => value;
 const propName = /[^.\[\]]+/g;
 const isDeepKey = key => isString(key) && /[\.\[\]]+/g.test(key);
 
-
 function getDeepValue(obj, key) {
   const keys = key.match(propName) || [];
   let value = obj;
