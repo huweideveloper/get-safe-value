@@ -27,7 +27,7 @@ function getDeepValue(obj, key) {
 }
 
 function getSingleValue(obj, key) {
-  if( isObject(obj) || isArray(obj) ) return obj[key];
+  if( typeof obj === 'object' && obj != null ) return obj[key];
 }
 
 function getValue(obj, key, defaultValue, isType, getVal = defaultGetVal) {

@@ -31,9 +31,6 @@ const a = ['2',2,true,false,['1',2, true],{ str: '3', number:3 }];
 describe('getString', function() {
   it('test getString', function() {
 
-   
-
-
     assert.deepStrictEqual(getString(null), '');
     assert.deepStrictEqual(getString(undefined), '');
     assert.deepStrictEqual(getString("hello world"), '');
